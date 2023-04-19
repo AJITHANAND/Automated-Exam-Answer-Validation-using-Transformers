@@ -6,7 +6,7 @@ from .models import *
 def student_only(function):
     def wrap(request, *args, **kwargs):
         try:
-            entry = Student.objects.get(sd_id=request.session.get('session_identifier'))
+            entry = Student.objects.get(register_num=request.session.get('session_identifier'))
             print(entry)
             return function(request, *args, **kwargs)
         except ObjectDoesNotExist:
