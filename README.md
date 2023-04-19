@@ -1,0 +1,2 @@
+# Automated-Exam-Answer-Validation-using-Transformers
+This project develops an automated system for validating exam answers using transformer models. It encodes answers and a reference answer into vectors and calculates cosine similarity to assign scores. The system can handle different exam question types and is evaluated on various datasets. Performance is compared to human graders and other methods
