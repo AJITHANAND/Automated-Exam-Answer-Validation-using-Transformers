@@ -1,0 +1,19 @@
+What is an array? An array is a data structure that stores a collection of values, all of the same type, in contiguous memory locations. Each value in an array is identified by an index or a subscript, which is a non-negative integer that represents its position in the array. The index of the first element in an array is typically 0, and the index of the last element is usually one less than the size of the array.
+
+What is an algorithm? An algorithm is a step-by-step procedure for solving a problem or achieving a specific task. It is a well-defined sequence of instructions that can be followed to produce a desired outcome. Algorithms can be expressed in many forms, including natural language, pseudocode, flowcharts, and programming languages.
+
+What is a variable? A variable is a named storage location in a computer program that can hold a value. The value of a variable can change during the execution of the program. Variables are used to store data that can be used and manipulated by the program.
+
+What is a function? A function is a named block of code that performs a specific task and can be called by other parts of the program. Functions allow for code reuse and make programs easier to read and maintain. A function takes input in the form of arguments and returns output in the form of a return value.
+
+What is an object? An object is an instance of a class that encapsulates data and behavior. Objects are used in object-oriented programming to model real-world entities and their interactions. An object has properties that represent its state and methods that define its behavior.
+
+What is inheritance? Inheritance is a mechanism in object-oriented programming that allows classes to inherit properties and methods from other classes. This allows for code reuse and makes it easier to create and maintain complex systems. Inheritance creates a hierarchy of classes where subclasses inherit from superclasses.
+
+What is polymorphism? Polymorphism is the ability of objects to take on many forms. In object-oriented programming, this means that objects of different classes can be treated as objects of a common superclass. This allows for flexibility and code reuse, as the same code can work with objects of different classes.
+
+What is encapsulation? Encapsulation is the practice of hiding the internal details of an object or class from the outside world. This allows for better abstraction and makes it easier to change the implementation without affecting other parts of the program. Encapsulation is achieved through the use of access modifiers such as public, private, and protected.
+
+What is recursion? Recursion is a programming technique where a function calls itself to solve smaller instances of the same problem. This allows for elegant solutions to complex problems but can also lead to infinite loops if not implemented correctly. Recursion can often be replaced with iteration for improved performance.
+
+What is concurrency? Concurrency refers to the execution of multiple tasks simultaneously. This can be achieved through parallelism, where tasks are executed on multiple processors at the same time, or through interleaving, where tasks are executed one after another but their execution overlaps in time.
