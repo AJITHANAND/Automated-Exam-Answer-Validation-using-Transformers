@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from Analysis.similarity import analysis
 from .decorators import student_only
 from .models import *
 from django.core.exceptions import *
@@ -7,7 +6,7 @@ import hashlib
 from django.db import IntegrityError
 
 
-def passwordToHash(password: str) -> str:
+def password_to_hash(password: str) -> str:
     password_bytes = password.encode('utf-8')
     return hashlib.sha512(password_bytes).hexdigest()
 
@@ -18,7 +17,7 @@ def login(request):
         return redirect('student_test')
     if request.method == "POST":
         email = request.POST['email']
-        password = passwordToHash(request.POST['password'])
+        password = password_to_hash(request.POST['password'])
         try:
             student = Login.objects.get(email=email, password=password)
             request.session['session_identifier'] = student.register_num
@@ -32,7 +31,7 @@ def registration(request):
     if request.method == "POST":
         name = request.POST['user-name']
         email = request.POST['user-email']
-        password = passwordToHash(request.POST['user-password'])
+        password = password_to_hash(request.POST['user-password'])
         std = request.POST['user-class']
 
         obj = Student()
