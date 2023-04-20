@@ -27,3 +27,27 @@ class Login(models.Model):
                                 default="d80cf102414d7d87b3073ea9b1ec4ef60a5b59bd5f10a66839f0351d9af1b9ccab08b726817956c6eec1355f97438271e6b42f4e155b7d36fbef23eb6097fc6c")
     register_num = models.CharField(max_length=100, unique=True)
     student = models.OneToOneField(Student, on_delete=models.CASCADE)
+
+
+class Answers(models.Model):
+    answer = models.JSONField(default=list)
+    mark = models.JSONField(default=list)
+    is_processing = models.BooleanField(default=True)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    question_code = models.CharField(max_length=100)
+
+    def set_answer(self, index, value):
+        answers = self.answer or [''] * 10
+        answers[index] = value
+        self.answer = answers
+
+    def get_answer(self, index):
+        return (self.answer or [''] * 10)[index]
+
+    def set_mark(self, index, value):
+        mark = self.mark or [''] * 10
+        mark[index] = value
+        self.answer = mark
+
+    def get_mark(self, index):
+        return (self.mark or [''] * 10)[index]

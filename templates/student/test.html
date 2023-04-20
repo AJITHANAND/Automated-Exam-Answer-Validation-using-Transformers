@@ -1,13 +1,22 @@
 <!doctype html>
+{% load static %}
 <html>
 <head>
     <meta charset='utf-8'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <title>Test</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'icons/test/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'icons/test/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'icons/test/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'icons/test/site.webmanifest'  %}">
+
+
     <link href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css' rel='stylesheet'>
     <link href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css' rel='stylesheet'>
     <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
-    <style>::-webkit-scrollbar {
+    <style>
+        
+    ::-webkit-scrollbar {
         width: 8px;
     }
 
@@ -72,7 +81,12 @@
     .btn:active {
         outline: 0 !important;
         box-shadow: none !important;
-    }</style>
+    }
+    .term{
+        background:transparent;
+        border: none;
+    }
+    </style>
 </head>
 <body className='snippet-body'>
 <div class="container mt-5">
@@ -88,21 +102,27 @@
             <div class="border">
                 <div class="question bg-white p-3 border-bottom">
                     <div class="d-flex flex-row justify-content-between align-items-center mcq">
-                        <h4>Online Test</h4><span>1/1</span></div>
+                        <h4>Online Test {{ term }}</h4><span>{{ Name }}:{{ regNum }}</span></div>
                 </div>
-                <div class="question bg-white p-3 border-bottom">
+                <input type="hidden" name="term" value="{{ term }}">
+                <input type="hidden" name="regNum" value="{{ regNum }}">
+                {% for i in questions %}
+                <div class="question mt-2 bg-white p-3 border-bottom">
                     <div class="d-flex flex-row align-items-center question-title">
-                        <h3 class="text-danger">Q.</h3>
-                        <h5 class="mt-1 ml-2">What is an array ?</h5>
+                        <h3 class="text-danger">Q.{{forloop.counter}}</h3>
+                        <h5 class="mt-1 ml-2">{{i}}?</h5>
                     </div>
-                    <div class="ans ml-2">
+                    <div class="ans ml-2 form-group">
                         <label>
-                            <textarea name="answer" rows="5" cols="80"  placeholder="enter your answer"></textarea>
+                            <textarea class="form-control" rows="3" style="width:44dvw"  name="answer"  placeholder="enter your answer"></textarea>
                         </label>
                     </div>
                 </div>
+                {% endfor %}
+                
+                
                 <div class="d-flex flex-row justify-content-between align-items-center p-3 bg-white">
-                    <button class="btn btn-primary d-flex align-items-center btn-danger" type="button"><i
+                    <button class="btn btn-primary d-flex align-items-center btn-danger" type="reset"><i
                             class="fa fa-refresh mt-1 mr-1"></i>&nbsp;clear
                     </button>
                     <button class="btn btn-primary border-success align-items-center btn-success" type="submit">submit<i
@@ -118,11 +138,8 @@
 <script type='text/javascript' src='#'></script>
 <script type='text/javascript' src='#'></script>
 <script type='text/javascript' src='#'></script>
-<script type='text/javascript'>#</script>
-<script type='text/javascript'>var myLink = document.querySelector('a[href="#"]');
-myLink.addEventListener('click', function (e) {
-    e.preventDefault();
-});</script>
+<script type='text/javascript'></script>
+
 
 </body>
 </html>

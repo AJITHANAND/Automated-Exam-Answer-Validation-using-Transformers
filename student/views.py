@@ -4,6 +4,7 @@ from .models import *
 from django.core.exceptions import *
 import hashlib
 from django.db import IntegrityError
+from teacher.models import Questions
 
 
 def password_to_hash(password: str) -> str:
@@ -57,7 +58,31 @@ def registration(request):
 
 @student_only
 def exam_test(request):
+    std_obj = Student.objects.get(register_num=request.session['session_identifier'])
+    obj = Questions.objects.filter(std=std_obj.std_class)
+    questions = obj.values_list('question', flat=True)
+    term = obj.get(question=questions[0]).question_code
     if request.method == "POST":
         print(request.POST)
-        # return render(request,'student/test.html' ,{'status':})
-    return render(request, 'student/test.html')
+        answer: list = request.POST.getlist('answer')
+        term: str = request.POST['term']
+
+        ans_obj = Answers()
+        for i in range(len(answer)):
+            print(answer[i])
+            ans_obj.set_answer(i, answer[i])
+        ans_obj.student = std_obj
+        ans_obj.question_code = term
+        ans_obj.save()
+        return redirect('student_home')
+    return render(request, 'student/test.html', {'questions': questions, 'term': term, 'regNum': std_obj.register_num,
+                                                 'Name': std_obj.name})
+
+
+def home(request):
+    return render(request, 'student/home.html')
+
+
+def analysis(request):
+    pass
+
