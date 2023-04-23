@@ -12,6 +12,7 @@ from django.core import serializers
 import numpy
 import concurrent.futures
 
+
 def password_to_hash(password: str) -> str:
     password_bytes = password.encode('utf-8')
     return hashlib.sha512(password_bytes).hexdigest()
@@ -31,6 +32,10 @@ def login(request):
         except ObjectDoesNotExist:
             return render(request, 'student/login.html', {'error': 'Invalid Credentials'})
     return render(request, 'student/login.html')
+
+def log_out(request):
+    request.session.flush()
+    return redirect('student_home')
 
 
 def registration(request):
@@ -86,7 +91,13 @@ def exam_test(request):
 
 
 def home(request):
-    return render(request, 'student/home.html')
+    try:
+        entry = Student.objects.get(register_num=request.session.get('session_identifier'))
+        context = {'Name': entry.name, 'logged': True}
+    except ObjectDoesNotExist:
+        pass
+        context = {'logged': False}
+    return render(request, 'student/home.html', context)
 
 
 def analysis_answers(request):

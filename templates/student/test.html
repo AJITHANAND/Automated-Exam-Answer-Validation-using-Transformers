@@ -126,6 +126,9 @@
                     <button class="btn btn-primary d-flex align-items-center btn-danger" type="reset"><i
                             class="fa fa-refresh mt-1 mr-1"></i>&nbsp;clear
                     </button>
+                    <button onclick="redirectHome(event)" class="btn btn-primary d-flex align-items-center btn-info" ><i
+                            class="fa fa-home mt-1 mr-1"></i>&nbsp;Home
+                    </button>
                     <button class="btn btn-primary border-success align-items-center btn-success" type="submit">submit<i
                             class="fa fa-check  ml-2"></i></button>
                 </div>
@@ -139,7 +142,12 @@
 <script type='text/javascript' src='#'></script>
 <script type='text/javascript' src='#'></script>
 <script type='text/javascript' src='#'></script>
-<script type='text/javascript'></script>
+<script type='text/javascript'>
+    function redirectHome(event){
+        event.preventDefault();
+        location.href ="{% url 'student_home' %}";
+    }
+</script>
 
 
 </body>
