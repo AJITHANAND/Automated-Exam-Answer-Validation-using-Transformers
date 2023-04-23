@@ -38,10 +38,11 @@ def similarity_analysis(model_name,sentences):
         [sentence_embeddings[0]],
         sentence_embeddings[1:]
     )
-    t = PrettyTable(['Name', 'Similarity'])
-    for name, similar in zip(answers_from, arr[0]):
-        t.add_row([name, similar])
-    return t
+    return arr[0]
+    # t = PrettyTable(['Name', 'Similarity'])
+    # for name, similar in zip(answers_from, arr[0]):
+    #     t.add_row([name, similar])
+    # return t
 
 
 models = ['all-mpnet-base-v2', 'multi-qa-mpnet-base-dot-v1', 'all-distilroberta-v1', 'all-MiniLM-L12-v2',
