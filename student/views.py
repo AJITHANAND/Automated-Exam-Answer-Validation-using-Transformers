@@ -111,9 +111,19 @@ def analysis_answers(request):
 
     ans_obj = Answers.objects.filter(student=std_obj, is_processing=True)
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
-        futures = [executor.submit(process_answer, answer) for answer in ans_obj]
-        concurrent.futures.wait(futures)
+    # single thread
+    for i in ans_obj:
+        paper = Paper.objects.get(paper_code=i.paper_code)
+        ques = Questions.objects.get(question_num=i.question_num, paper_code=paper)
+        similarity = analysis.similarity_analysis(analysis.models[-1], [ques.answer, i.answer])
+        i.mark = float("{:.2f}".format(float(numpy.round(similarity * 2, 2))))
+        i.is_processing = False
+        i.save()
+
+    # multi threading ,  max_workers can be changed according to the number of threads needed
+    # with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+    #     futures = [executor.submit(process_answer, answer) for answer in ans_obj]
+    #     concurrent.futures.wait(futures)
 
     ret_obj = Answers.objects.filter(student=std_obj, is_processing=False).values('question_num', 'mark', 'paper_code')
     result = []
@@ -136,10 +146,13 @@ def analysis_answers(request):
         return HttpResponseBadRequest('Invalid request')
 
 
-def process_answer(answer):
-    paper = Paper.objects.get(paper_code=answer.paper_code)
-    ques = Questions.objects.get(question_num=answer.question_num, paper_code=paper)
-    similarity = analysis.similarity_analysis(analysis.models[-1], [ques.answer, answer.answer])
-    answer.mark = float("{:.2f}".format(float(numpy.round(similarity * 2, 2))))
-    answer.is_processing = False
-    answer.save()
+
+
+# for multi threading
+# def process_answer(answer):
+#     paper = Paper.objects.get(paper_code=answer.paper_code)
+#     ques = Questions.objects.get(question_num=answer.question_num, paper_code=paper)
+#     similarity = analysis.similarity_analysis(analysis.models[-1], [ques.answer, answer.answer])
+#     answer.mark = float("{:.2f}".format(float(numpy.round(similarity * 2, 2))))
+#     answer.is_processing = False
+#     answer.save()
