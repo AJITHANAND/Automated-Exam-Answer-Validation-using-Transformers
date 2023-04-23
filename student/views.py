@@ -1,10 +1,15 @@
+import threading
 from django.shortcuts import render, redirect
 from .decorators import student_only
 from .models import *
 from django.core.exceptions import *
 import hashlib
 from django.db import IntegrityError
-from teacher.models import Questions
+from teacher.models import Questions, Paper
+from Analysis import analysis
+from django.http import HttpResponseBadRequest, JsonResponse
+from django.core import serializers
+import numpy
 
 
 def password_to_hash(password: str) -> str:
@@ -59,23 +64,24 @@ def registration(request):
 @student_only
 def exam_test(request):
     std_obj = Student.objects.get(register_num=request.session['session_identifier'])
-    obj = Questions.objects.filter(std=std_obj.std_class)
-    questions = obj.values_list('question', flat=True)
-    term = obj.get(question=questions[0]).question_code
+    paper = Paper.objects.get(std=std_obj.std_class, is_active=True)
+    obj = Questions.objects.filter(std=std_obj.std_class, paper_code=paper)
+    term = paper.paper_code
     if request.method == "POST":
         print(request.POST)
         answer: list = request.POST.getlist('answer')
         term: str = request.POST['term']
-
-        ans_obj = Answers()
-        for i in range(len(answer)):
-            print(answer[i])
-            ans_obj.set_answer(i, answer[i])
-        ans_obj.student = std_obj
-        ans_obj.question_code = term
-        ans_obj.save()
+        question_number: list = request.POST.getlist('question_number')
+        for ans, num in zip(answer, question_number):
+            ans_obj = Answers()
+            ans_obj.question_num = num
+            ans_obj.answer = ans
+            ans_obj.student = std_obj
+            ans_obj.paper_code = term
+            ans_obj.is_processing = True
+            ans_obj.save()
         return redirect('student_home')
-    return render(request, 'student/test.html', {'questions': questions, 'term': term, 'regNum': std_obj.register_num,
+    return render(request, 'student/test.html', {'questions': obj, 'term': term, 'regNum': std_obj.register_num,
                                                  'Name': std_obj.name})
 
 
@@ -83,6 +89,41 @@ def home(request):
     return render(request, 'student/home.html')
 
 
-def analysis(request):
-    pass
+def analysis_answers(request):
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    email = request.GET.get('email')
+    password = password_to_hash(request.GET.get('password'))
+    try:
+        std_obj = Login.objects.get(email=email, password=password).student
+    except ObjectDoesNotExist:
+        return JsonResponse({'status': 'Invalid Login Credentials'}, status=400)
 
+    ans_obj = Answers.objects.filter(student=std_obj, is_processing=True)
+
+    for i in ans_obj:
+        paper = Paper.objects.get(paper_code=i.paper_code)
+        ques = Questions.objects.get(question_num=i.question_num, paper_code=paper)
+        similarity = analysis.similarity_analysis(analysis.models[-1], [ques.answer, i.answer])
+        i.mark = float("{:.2f}".format(float(numpy.round(similarity * 2, 2))))
+        i.is_processing = False
+        i.save()
+
+    ret_obj = Answers.objects.filter(student=std_obj, is_processing=False).values('question_num', 'mark', 'paper_code')
+    result = []
+    for i in ret_obj:
+        question = Questions.objects.get(question_num=i['question_num'],
+                                         paper_code=Paper.objects.get(paper_code=i['paper_code']))
+        result.append(
+            {
+                'question': question.question,
+                'mark': i['mark'],
+                'term': i['paper_code']
+            }
+        )
+    print(result)
+    if is_ajax:
+        if request.method == 'GET':
+            return JsonResponse({'context': result})
+        return JsonResponse({'status': 'Invalid request'}, status=400)
+    else:
+        return HttpResponseBadRequest('Invalid request')

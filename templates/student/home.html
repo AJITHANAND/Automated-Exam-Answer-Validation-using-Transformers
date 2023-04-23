@@ -150,21 +150,6 @@
                 <form class="form" method="" action="">
                   <p class="description text-center">Or Be Classical</p>
                   <div class="card-body">
-{#                    <div class="form-group bmd-form-group">#}
-{#                      <div class="input-group">#}
-{#                        <div class="input-group-prepend">#}
-{#                          <span class="input-group-text">#}
-{#                            <i class="material-icons">face</i>#}
-{#                          </span>#}
-{#                        </div>#}
-{#                        <input#}
-{#                          type="text"#}
-{#                          class="form-control"#}
-{#                          placeholder="First Name..."#}
-{#                        />#}
-{#                      </div>#}
-{#                    </div>#}
-
                     <div class="form-group bmd-form-group">
                       <div class="input-group">
                         <div class="input-group-prepend">
@@ -176,6 +161,7 @@
                           type="text"
                           class="form-control"
                           placeholder="Email..."
+                          id="emailInput"
                         />
                       </div>
                     </div>
@@ -191,6 +177,7 @@
                           type="password"
                           placeholder="Password..."
                           class="form-control"
+                          id="passwordInput"
                         />
                       </div>
                     </div>
@@ -198,8 +185,8 @@
                 </form>
               </div>
               <div class="modal-footer justify-content-center">
-                <a href="#pablo" class="btn btn-primary btn-link btn-wd btn-lg"
-                  >Check Results</a
+                <button id="getResult" class="btn btn-primary btn-link btn-wd btn-lg"
+                  >Check Results</button
                 >
               </div>
             </div>
@@ -207,82 +194,7 @@
         </div>
       </div>
 
-{#      <div class="modal fade show" id="noticeModal" tabindex="-1" role="dialog">#}
-{#        <div class="modal-dialog modal-notice" role="document">#}
-{#          <div class="modal-content">#}
-{#            <div class="modal-header">#}
-{#              <h5 class="modal-title">How Do You Become an Affiliate?</h5>#}
-{#              <button#}
-{#                type="button"#}
-{#                class="close"#}
-{#                data-dismiss="modal"#}
-{#                aria-label="Close"#}
-{#              >#}
-{#                <i class="material-icons">clear</i>#}
-{#              </button>#}
-{#            </div>#}
-{#            <div class="modal-body">#}
-{#              <div class="instruction">#}
-{#                <div class="row">#}
-{#                  <div class="col-md-8">#}
-{#                    <strong>1. Register</strong>#}
-{#                    <p>#}
-{#                      The first step is to create an account at#}
-{#                      <a href="http://www.creative-tim.com/">Creative Tim</a>.#}
-{#                      You can choose a social network or go for the classic#}
-{#                      version, whatever works best for you.#}
-{#                    </p>#}
-{#                  </div>#}
-{#                  <div class="col-md-4">#}
-{#                    <div class="picture">#}
-{#                      <img#}
-{#                        src="https://images.unsplash.com/photo-1503088414719-16a89b27b122?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=ac67c22838204d52c929d622284ff9b0&auto=format&fit=crop&w=400&q=80"#}
-{#                        alt="Thumbnail Image"#}
-{#                        class="rounded img-fluid"#}
-{#                      />#}
-{#                    </div>#}
-{#                  </div>#}
-{#                </div>#}
-{#              </div>#}
-{#              <div class="instruction">#}
-{#                <div class="row">#}
-{#                  <div class="col-md-8">#}
-{#                    <strong>2. Apply</strong>#}
-{#                    <p>#}
-{#                      The first step is to create an account at#}
-{#                      <a href="http://www.creative-tim.com/">Creative Tim</a>.#}
-{#                      You can choose a social network or go for the classic#}
-{#                      version, whatever works best for you.#}
-{#                    </p>#}
-{#                  </div>#}
-{#                  <div class="col-md-4">#}
-{#                    <div class="picture">#}
-{#                      <img#}
-{#                        src="https://images.unsplash.com/photo-1519668167916-f522d6031d68?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=c8568f5a200bf21a8209528bae85b022&auto=format&fit=crop&w=400&q=80"#}
-{#                        alt="Thumbnail Image"#}
-{#                        class="rounded img-fluid"#}
-{#                      />#}
-{#                    </div>#}
-{#                  </div>#}
-{#                </div>#}
-{#              </div>#}
-{#              <p>#}
-{#                If you have more questions, don't hesitate to contact us or send#}
-{#                us a tweet @creativetim. We're here to help!#}
-{#              </p>#}
-{#            </div>#}
-{#            <div class="modal-footer text-center">#}
-{#              <button#}
-{#                type="button"#}
-{#                class="btn btn-info btn-round"#}
-{#                data-dismiss="modal"#}
-{#              >#}
-{#                Sounds good!#}
-{#              </button>#}
-{#            </div>#}
-{#          </div>#}
-{#        </div>#}
-{#      </div>#}
+
     </div>
 
     <div class="container">
@@ -290,6 +202,7 @@
             <thead>
                 <tr>
                     <th scope="col">Que.No</th>
+                    <th scope="col">Term</th>
                     <th scope="col">Question</th>
                     <th scope="col">Mark Scored</th>
                 </tr>
@@ -311,10 +224,60 @@
       integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
       crossorigin="anonymous"
     ></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
   <script>
       function redirectL(){
-          location.href="{% url 'student_login' %}"
+          location.href="{% url 'student_login' %}";
       }
+
+      $(document).on('click', '#getResult', function() {
+
+          let email = $('#emailInput').val();
+          let password = $('#passwordInput').val();
+
+          $.ajax({
+              url: "{% url 'answer_analysis' %}",
+              type: "GET",
+              data: {
+                  'email':email,
+                  'password':password
+              },
+              dataType: "json",
+              success: (data) => {
+                  console.log(data);
+                  // select the table and clear its content
+                  let table = $('.table');
+                  table.find('tbody').empty();
+
+                  let totalScore = 0;
+
+                  // iterate through the data and append rows to the table
+                  for (let i = 0; i < data.context.length; i++) {
+                      console.log(data.context[i]['mark'])
+                      let row = '<tr>' +
+                          '<td>' + (i+1) + '</td>' +
+                          '<td>' + data.context[i]['term'] + '</td>' +
+                          '<td>' + data.context[i]['question'] + '</td>' +
+                          '<td>' + data.context[i]['mark'].toFixed(2) + '</td>' +
+                          '</tr>';
+                      table.append(row);
+                      totalScore += data.context[i]['mark'];
+                  }
+                  // add a row at the end with the total score
+                  let totalRow = '<tr>' +
+                      '<td colspan="3">Total Scored:</td>' +
+                      '<td>' + totalScore.toFixed(2) +'/'+data.context.length*2 + '</td>' +
+                      '</tr>';
+                  table.append(totalRow);
+              },
+              error: (error) => {
+                  console.log("err test");
+                  console.log(error);
+              }
+          });
+      });
+
+
   </script>
   </body>
 </html>

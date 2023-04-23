@@ -1,5 +1,5 @@
 from django.db import models
-
+from teacher.models import Paper
 
 class Student(models.Model):
     email = models.EmailField(max_length=254, unique=True)
@@ -30,24 +30,9 @@ class Login(models.Model):
 
 
 class Answers(models.Model):
-    answer = models.JSONField(default=list)
-    mark = models.JSONField(default=list)
+    answer = models.CharField(max_length=1000)
+    mark = models.FloatField(default=-1)
     is_processing = models.BooleanField(default=True)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    question_code = models.CharField(max_length=100)
-
-    def set_answer(self, index, value):
-        answers = self.answer or [''] * 10
-        answers[index] = value
-        self.answer = answers
-
-    def get_answer(self, index):
-        return (self.answer or [''] * 10)[index]
-
-    def set_mark(self, index, value):
-        mark = self.mark or [''] * 10
-        mark[index] = value
-        self.answer = mark
-
-    def get_mark(self, index):
-        return (self.mark or [''] * 10)[index]
+    question_num = models.CharField(max_length=100)
+    paper_code = models.CharField(max_length=100)
