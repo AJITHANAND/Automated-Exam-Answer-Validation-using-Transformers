@@ -33,6 +33,7 @@ def login(request):
             return render(request, 'student/login.html', {'error': 'Invalid Credentials'})
     return render(request, 'student/login.html')
 
+
 def log_out(request):
     request.session.flush()
     return redirect('student_home')
@@ -90,14 +91,14 @@ def exam_test(request):
                                                  'Name': std_obj.name})
 
 
-def home(request):
-    try:
-        entry = Student.objects.get(register_num=request.session.get('session_identifier'))
-        context = {'Name': entry.name, 'logged': True}
-    except ObjectDoesNotExist:
-        pass
-        context = {'logged': False}
-    return render(request, 'student/home.html', context)
+# def home(request):
+#     try:
+#         entry = Student.objects.get(register_num=request.session.get('session_identifier'))
+#         context = {'Name': entry.name, 'logged': True}
+#     except ObjectDoesNotExist:
+#         pass
+#         context = {'logged': False}
+#     return render(request, 'student/home.html', context)
 
 
 def analysis_answers(request):
@@ -146,8 +147,6 @@ def analysis_answers(request):
         return HttpResponseBadRequest('Invalid request')
 
 
-
-
 # for multi threading
 # def process_answer(answer):
 #     paper = Paper.objects.get(paper_code=answer.paper_code)
@@ -156,3 +155,7 @@ def analysis_answers(request):
 #     answer.mark = float("{:.2f}".format(float(numpy.round(similarity * 2, 2))))
 #     answer.is_processing = False
 #     answer.save()
+
+
+def home(request):
+    return render(request, 'student/new_home.html')
