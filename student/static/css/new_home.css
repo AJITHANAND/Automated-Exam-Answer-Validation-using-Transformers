@@ -6,11 +6,11 @@ body{
     font-family: 'Maven Pro', sans-serif;
 }
 
-.wrapper {
+.wrapper-instruction {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100dvh;
+    height: 76dvh;
     background: linear-gradient(to bottom right,#87D4CA 50%,#FD9B81 50%);
 
 }

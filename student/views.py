@@ -28,7 +28,7 @@ def login(request):
         try:
             student = Login.objects.get(email=email, password=password)
             request.session['session_identifier'] = student.register_num
-            return redirect('student_test')
+            return redirect('student_home')
         except ObjectDoesNotExist:
             return render(request, 'student/login.html', {'error': 'Invalid Credentials'})
     return render(request, 'student/login.html')
@@ -158,4 +158,94 @@ def analysis_answers(request):
 
 
 def home(request):
-    return render(request, 'student/new_home.html')
+    return render(request, 'student/instructions.html')
+
+
+@student_only
+def dashboard(request):
+    std_obj = Student.objects.get(register_num=request.session['session_identifier'])
+    context = {
+        'active': 'Dash',
+        'page': 'Home',
+        'Name': std_obj.name
+    }
+    return render(request, 'student/dashboard/home.html', context)
+
+
+@student_only
+def examination_instruction(request):
+    std_obj = Student.objects.get(register_num=request.session['session_identifier'])
+    context = {
+        'active': 'Exam',
+        'page': 'Exam Instruction',
+        'Name': std_obj.name
+    }
+    return render(request, 'student/dashboard/instruction.html', context)
+
+
+@student_only
+def examination(request):
+    std_obj = Student.objects.get(register_num=request.session['session_identifier'])
+    paper = Paper.objects.get(std=std_obj.std_class, is_active=True)
+    obj = Questions.objects.filter(std=std_obj.std_class, paper_code=paper)
+    term = paper.paper_code
+    if request.method == "POST":
+        answer: list = request.POST.getlist('answer')
+        term: str = request.POST['term']
+        question_number: list = request.POST.getlist('question_number')
+        for ans, num in zip(answer, question_number):
+            ans_obj = Answers()
+            ans_obj.question_num = num
+            ans_obj.answer = ans
+            ans_obj.student = std_obj
+            ans_obj.paper_code = term
+            ans_obj.is_processing = True
+            ans_obj.save()
+
+    context = {
+        'active': 'Exam',
+        'page': 'Exam Portal',
+        'questions': obj,
+        'term': term,
+        'regNum': std_obj.register_num,
+        'Name': std_obj.name
+    }
+
+    return render(request, 'student/dashboard/exam.html', context)
+
+
+@student_only
+def show_results(request):
+    std_obj = Student.objects.get(register_num=request.session['session_identifier'])
+    ans_obj = Answers.objects.filter(student=std_obj, is_processing=True)
+
+    # single thread
+    for i in ans_obj:
+        paper = Paper.objects.get(paper_code=i.paper_code)
+        ques = Questions.objects.get(question_num=i.question_num, paper_code=paper)
+        similarity = analysis.similarity_analysis(analysis.models[-1], [ques.answer, i.answer])
+        i.mark = float("{:.2f}".format(float(numpy.round(similarity * 2, 2))))
+        i.is_processing = False
+        i.save()
+
+    ret_obj = Answers.objects.filter(student=std_obj, is_processing=False).values('question_num', 'mark', 'paper_code')
+    result = []
+    for i in ret_obj:
+        question = Questions.objects.get(question_num=i['question_num'],
+                                         paper_code=Paper.objects.get(paper_code=i['paper_code']))
+        result.append(
+            {
+                'question': question.question,
+                'mark': i['mark'],
+                'term': i['paper_code']
+            }
+        )
+
+    context = {
+        'active': 'Result',
+        'page': 'Published Result',
+        'result': result,
+        'maxMark': 2,
+        'Name': std_obj.name
+    }
+    return render(request, 'student/dashboard/result.html', context)
