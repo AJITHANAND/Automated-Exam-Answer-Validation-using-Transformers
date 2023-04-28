@@ -21,7 +21,7 @@ def password_to_hash(password: str) -> str:
 def login(request):
     is_logged = request.session.get('session_identifier')
     if is_logged is not None:
-        return redirect('student_test')
+        return redirect('student_home')
     if request.method == "POST":
         email = request.POST['email']
         password = password_to_hash(request.POST['password'])
@@ -36,7 +36,7 @@ def login(request):
 
 def log_out(request):
     request.session.flush()
-    return redirect('student_home')
+    return redirect('student_login')
 
 
 def registration(request):
@@ -214,7 +214,6 @@ def examination(request):
     return render(request, 'student/dashboard/exam.html', context)
 
 
-@student_only
 def show_results(request):
     std_obj = Student.objects.get(register_num=request.session['session_identifier'])
     ans_obj = Answers.objects.filter(student=std_obj, is_processing=True)
@@ -231,8 +230,12 @@ def show_results(request):
     ret_obj = Answers.objects.filter(student=std_obj, is_processing=False).values('question_num', 'mark', 'paper_code')
     result = []
     for i in ret_obj:
-        question = Questions.objects.get(question_num=i['question_num'],
-                                         paper_code=Paper.objects.get(paper_code=i['paper_code']))
+        try:
+            question = Questions.objects.get(question_num=i['question_num'],
+                                             paper_code=Paper.objects.get(paper_code=i['paper_code']))
+        except ObjectDoesNotExist:
+            question = Questions()
+            question.question = "Term that contain this Question deleted"
         result.append(
             {
                 'question': question.question,
